@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1411">
+<title>Project details — Lynus Fabroa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+const CASES={
+  digibridgeai:{
+    title:'DigiBridgeAI+',kind:'Digital inclusion system',year:'2026',
+    theme:{bg:'#0D1411',fg:'#E9F0E9',accent:'#4CC08D',motif:'network',name:'Connected — pine and mint'},
+    image:'assets/digibridgeai.png',imageAlt:'DigiBridgeAI+ system interface',
+    overview:'DigiBridgeAI+ is a digital inclusion system. This project page introduces the system and links to its website.',
+    statement:'A digital inclusion system, presented through a network-inspired visual language.',
+    facts:[['Project','DigiBridgeAI+'],['Focus','Digital inclusion'],['Format','Digital system']],
+    resource:{label:'Explore DigiBridgeAI+',href:'https://digibridgeai.vercel.app/',external:true}
+  },
+  'green-campus':{
+    title:'Green Campus',kind:'WordPress website',year:'2025',
+    theme:{bg:'#F1F0E7',fg:'#19251E',accent:'#347A55',motif:'leaves',name:'Green Campus — leaf and soil'},
+    image:'assets/wordpress-green-campus.jpg',imageAlt:'Green Campus WordPress website',
+    overview:'Green Campus is a website built with WordPress. This project page features the supplied website image and highlights its green, campus-inspired theme.',
+    statement:'A WordPress website for Green Campus, framed by an organic and botanical visual language.',
+    facts:[['Project','Green Campus'],['Platform','WordPress'],['Format','Website']]
+  },
+  'user-manual':{
+    title:'User Manual',kind:'System documentation',year:'2026',
+    theme:{bg:'#111827',fg:'#F1F3F5',accent:'#E9B96E',motif:'pages',name:'Field guide — ink and amber'},
+    image:'assets/digibridgeai-user-manual.png',imageAlt:'DigiBridgeAI+ user manual cover',
+    overview:'This user manual documents the DigiBridgeAI+ Digital Inclusion System. Open the PDF to view the complete guide.',
+    statement:'A practical companion to the DigiBridgeAI+ Digital Inclusion System.',
+    facts:[['Document','User Manual'],['For','DigiBridgeAI+'],['Format','PDF guide']],
+    resource:{label:'View the user manual PDF',href:'assets/DigibridgeAI_UserManual.pdf',external:true}
+  },
+  datawhisperai:{
+    title:'DataWhisperAI',kind:'Conversational data discovery prototype',year:'2026',
+    theme:{bg:'#111222',fg:'#F0F0FA',accent:'#A89BFF',motif:'query',name:'Signal — indigo and violet'},
+    image:'assets/datawhisperai-prototype.png',imageAlt:'DataWhisperAI prototype design',
+    overview:'DataWhisperAI is a prototype design for a conversational data discovery interface. Explore the website to see the prototype.',
+    statement:'A conversational prototype for discovering data through natural language.',
+    facts:[['Project','DataWhisperAI'],['Focus','Conversational data discovery'],['Format','Prototype design']],
+    resource:{label:'Explore DataWhisperAI',href:'https://datawhisperai-conversationaldatadiscovery.vercel.app/',external:true}
+  },
+  'bustrack-ph':{
+    title:'BusTrack PH',kind:'Flutter bus-tracking app',year:'2026',
+    theme:{bg:'#101820',fg:'#EDF2F4',accent:'#F2B84B',motif:'route',name:'Transit — midnight and amber'},
+    image:'assets/bustrack-ph.png',imageAlt:'BusTrack PH live bus locations dashboard',
+    overview:'BusTrack PH is a Flutter app for tracking bus routes in the Philippines. Visit the project website to explore the application.',
+    statement:'A Flutter application focused on bus routes in the Philippines.',
+    facts:[['Project','BusTrack PH'],['Platform','Flutter'],['Format','Mobile application']],
+    resource:{label:'Visit BusTrack PH',href:'https://bustrack-ph.vercel.app/',external:true}
+  }
+};
+const projectKey=new URLSearchParams(location.search).get('project');
+const project=CASES[projectKey];
+if(project){
+  document.documentElement.style.setProperty('--bg',project.theme.bg);
+  document.documentElement.style.setProperty('--fg',project.theme.fg);
+  document.documentElement.style.setProperty('--accent',project.theme.accent);
+  document.documentElement.dataset.motif=project.theme.motif;
+  document.title=project.title+' — Lynus Fabroa';
+}else{
+  document.title='Project not found — Lynus Fabroa';
+}
+</script>
+<style>
+:root{--bg:#0D1411;--fg:#E9F0E9;--accent:#4CC08D;--line:color-mix(in srgb,var(--fg) 18%,transparent);--dim:color-mix(in srgb,var(--fg) 65%,transparent);--glass:color-mix(in srgb,var(--bg) 82%,transparent);--disp:'Syne',sans-serif;--mono:'Space Mono',monospace;--ease:cubic-bezier(.22,.68,.26,1);--pad:clamp(20px,4vw,58px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{min-height:100vh;overflow-x:hidden;background:var(--bg);color:var(--fg);font-family:var(--mono);-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+::selection{background:var(--accent);color:var(--bg)}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-motion="reduced"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+#scene{position:fixed;inset:0;z-index:0;width:100%;height:100%;pointer-events:none}
+.shade{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 52% 42%,transparent 28%,var(--glass) 120%)}
+.grain{position:fixed;inset:-60%;z-index:8;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 10s steps(9) infinite}
+@keyframes grain{0%,100%{transform:translate(0)}25%{transform:translate(3%,-2%)}50%{transform:translate(-2%,3%)}75%{transform:translate(2%,2%)}}
+#progress{position:fixed;z-index:10;left:0;top:0;width:100%;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left}
+header{position:fixed;inset:0 0 auto;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:16px var(--pad);border-bottom:1px solid transparent;transition:background .35s,border-color .35s}
+header.scrolled{background:var(--glass);backdrop-filter:blur(12px);border-color:var(--line)}
+.back{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.16em;text-decoration:none;text-transform:uppercase}
+.back svg,.arrow{width:14px;height:14px;flex:none;transition:transform .3s}
+.back:hover{color:var(--accent)}.back:hover svg{transform:translateX(-4px)}
+.header-index{font-size:10px;letter-spacing:.18em;color:var(--dim)}
+main,footer{position:relative;z-index:2}
+section{padding:clamp(72px,12vh,132px) var(--pad) 0}
+.hero{min-height:90svh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:116px;padding-bottom:clamp(34px,7vh,72px)}
+.kicker,.eyebrow{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+h1{max-width:1100px;margin:20px 0 38px;font:800 clamp(2.2rem,10.8vw,11rem)/.88 var(--disp);letter-spacing:-.055em;text-transform:uppercase}
+h1.long-title{font-size:clamp(1rem,calc((100vw - 40px)*.078),9rem)}
+h1 .title-accent{color:transparent;-webkit-text-stroke:1.5px var(--fg)}
+.hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block:1px solid var(--line)}
+.hero-meta div{padding:15px 16px 15px 0}
+.hero-meta div+div{border-left:1px solid var(--line);padding-left:18px}
+.hero-meta span{display:block;margin-bottom:7px;color:var(--dim);font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+.hero-meta b{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.scroll-cue{display:flex;align-items:center;gap:10px;margin-top:25px;font-size:9px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+.scroll-cue i{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4;transform:scale(1.7)}}
+.figure{position:relative;margin:0 var(--pad);height:clamp(260px,58vh,650px);overflow:hidden;border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 84%,var(--accent))}
+.figure img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);will-change:transform}
+.figure figcaption{position:absolute;right:16px;bottom:14px;padding:8px 10px;background:var(--glass);font-size:8px;letter-spacing:.12em;text-transform:uppercase}
+.section-head{display:flex;align-items:center;gap:14px;margin-bottom:clamp(30px,6vh,56px);font-size:11px;letter-spacing:.17em;text-transform:uppercase}
+.section-head b{color:var(--accent)}
+.section-head i{height:1px;flex:1;background:var(--line)}
+.section-head small{color:var(--dim);font-size:9px}
+.statement{max-width:1050px;font:600 clamp(1.6rem,4vw,3.4rem)/1.25 var(--disp);letter-spacing:-.025em}
+.overview{display:grid;grid-template-columns:minmax(140px,.38fr) 1fr;gap:clamp(22px,5vw,70px);margin-top:clamp(46px,9vh,86px);padding-top:22px;border-top:1px solid var(--line)}
+.overview h2{font-size:9px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+.overview p{max-width:65ch;font-size:12px;line-height:2;color:var(--dim)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:clamp(36px,7vh,68px)}
+.fact{min-height:150px;padding:20px;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;transition:transform .35s var(--ease),border-color .35s}
+.fact:hover{transform:translateY(-6px);border-color:var(--accent)}
+.fact span{font-size:9px;color:var(--dim);letter-spacing:.17em;text-transform:uppercase}
+.fact b{font:700 clamp(1rem,2vw,1.45rem)/1.2 var(--disp);text-transform:uppercase}
+.motif-section{padding-bottom:clamp(76px,13vh,142px)}
+.motif-box{min-height:260px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:clamp(22px,4vw,44px);border:1px solid var(--line);background:linear-gradient(125deg,color-mix(in srgb,var(--accent) 10%,transparent),transparent 68%)}
+.motif-box p{max-width:46ch;color:var(--dim);font-size:11px;line-height:1.9}
+.motif-label{font:800 clamp(1.2rem,3vw,2rem) var(--disp);text-transform:uppercase}
+.resources{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.resource{display:inline-flex;align-items:center;gap:12px;padding:15px 18px;border:1px solid var(--accent);color:var(--accent);font-size:9px;letter-spacing:.14em;text-decoration:none;text-transform:uppercase;transition:background .25s,color .25s}
+.resource:hover{background:var(--accent);color:var(--bg)}
+.next-section{padding-top:0;padding-bottom:clamp(64px,10vh,112px)}
+.next-link{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:clamp(24px,5vw,48px);border:1px solid var(--line);text-decoration:none;transition:border-color .3s,color .3s}
+.next-link:hover{border-color:var(--accent);color:var(--accent)}
+.next-link small{display:block;margin-bottom:10px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.next-link b{font:800 clamp(1.6rem,5vw,3.8rem) var(--disp);text-transform:uppercase}
+.next-link svg{width:28px}
+footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px var(--pad);border-top:1px solid var(--line);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+footer a{color:var(--fg);text-decoration:none}footer a:hover{color:var(--accent)}
+[data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+[data-reveal].visible{opacity:1;transform:none}
+#notFound{min-height:100svh;place-content:center;gap:18px;padding:var(--pad)}
+#notFound h1{font-size:clamp(2.5rem,8vw,6rem);margin:0}
+#notFound a{color:var(--accent)}
+@media(max-width:680px){
+  .hero-meta{grid-template-columns:1fr}
+  .hero-meta div{padding:12px 0}
+  .hero-meta div+div{padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  .overview{grid-template-columns:1fr;gap:14px}
+  .facts{grid-template-columns:1fr}
+  .fact{min-height:110px}
+  .motif-box{min-height:230px;flex-direction:column;align-items:flex-start;justify-content:flex-end}
+  footer{align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="shade" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+<header id="header">
+  <a class="back" href="portfolio.html#work">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
+    All work
+  </a>
+  <span class="header-index" id="caseIndex"></span>
+</header>
+<main id="casePage">
+  <section class="hero">
+    <div class="kicker" id="kind"></div>
+    <h1 id="title"></h1>
+    <div class="hero-meta" id="meta"></div>
+    <p class="scroll-cue"><i></i>Scroll — the scene responds to your movement</p>
+  </section>
+  <figure class="figure" data-reveal>
+    <img id="projectImage" alt="">
+    <figcaption id="imageCaption"></figcaption>
+  </figure>
+  <section>
+    <div class="section-head" data-reveal><b>01</b><span>Overview</span><i></i><small>Project context</small></div>
+    <p class="statement" id="statement" data-reveal></p>
+    <div class="overview" data-reveal><h2>About this work</h2><p id="overview"></p></div>
+    <div class="facts" id="facts"></div>
+  </section>
+  <section class="motif-section">
+    <div class="section-head" data-reveal><b>02</b><span>Visual direction</span><i></i><small id="themeName"></small></div>
+    <div class="motif-box" data-reveal>
+      <div><span class="eyebrow">Interactive study</span><p class="motif-label" id="motifLabel"></p></div>
+      <p id="motifCopy"></p>
+    </div>
+    <div class="resources" id="resources"></div>
+  </section>
+  <section class="next-section">
+    <div class="section-head" data-reveal><b>03</b><span>Continue exploring</span><i></i><small>Selected work</small></div>
+    <a class="next-link" id="nextLink" href="portfolio.html#work" data-reveal>
+      <span><small id="nextKicker">Back to selected work</small><b id="nextTitle">All projects</b></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    </a>
+  </section>
+</main>
+<main id="notFound" hidden>
+  <p class="eyebrow">Project details</p>
+  <h1>Project not found</h1>
+  <a href="portfolio.html#work">Return to selected work</a>
+</main>
+<footer><span>© 2026 Lynus Fabroa</span><span id="themeFooter"></span><a href="portfolio.html#work">Back to portfolio ↑</a></footer>
+<script>
+(()=>{'use strict';
+const $=selector=>document.querySelector(selector);
+const keys=Object.keys(CASES),current=keys.indexOf(projectKey);
+if(current<0){
+  $('#casePage').hidden=true;
+  $('#notFound').hidden=false;
+  $('#notFound').style.display='grid';
+  $('#progress').hidden=true;
+  return;
+}
+const P=project;
+const next=CASES[keys[(current+1)%keys.length]];
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduced)document.documentElement.dataset.motion='reduced';
+$('#caseIndex').textContent=`${String(current+1).padStart(2,'0')} / ${String(keys.length).padStart(2,'0')}`;
+$('#kind').textContent=P.kind+' — project overview';
+$('#title').textContent=P.title;
+$('#title').classList.toggle('long-title',P.title.replace(/\s/g,'').length>11);
+$('#meta').innerHTML=[['Project type',P.kind],['Year',P.year],['Theme',P.theme.name]]
+  .map(([label,value])=>`<div><span>${label}</span><b>${value}</b></div>`).join('');
+$('#projectImage').src=P.image;
+$('#projectImage').alt=P.imageAlt;
+$('#imageCaption').textContent=P.title+' — selected project image';
+$('#statement').textContent=P.statement;
+$('#overview').textContent=P.overview;
+$('#facts').innerHTML=P.facts.map(([label,value])=>`<article class="fact" data-reveal><span>${label}</span><b>${value}</b></article>`).join('');
+$('#themeName').textContent=P.theme.name;
+$('#themeFooter').textContent='Visual direction: '+P.theme.name;
+$('#motifLabel').textContent=({
+  network:'A system of connections',
+  leaves:'A growing campus',
+  pages:'A guide, page by page',
+  query:'A conversation with data',
+  route:'A route through the city'
+})[P.theme.motif];
+$('#motifCopy').textContent=({
+  network:'The animated network is a visual interpretation of connection and digital access; it is an ambient design element, not a diagram of system functionality.',
+  leaves:'The floating leaf forms echo the Green Campus theme and WordPress project image; they are decorative elements for this case-study page.',
+  pages:'The turning page forms reflect the user manual format and its relationship to DigiBridgeAI+; the animation is decorative.',
+  query:'The orbiting signal marks and connecting paths visualize asking questions and finding connections in data; this motion is decorative and does not represent live system activity.',
+  route:'The moving route line and station markers evoke transit navigation; they are a decorative illustration and do not display live bus locations.'
+})[P.theme.motif];
+if(P.resource){
+  const link=document.createElement('a');
+  link.className='resource';link.href=P.resource.href;link.target='_blank';link.rel='noopener noreferrer';
+  link.textContent=P.resource.label+' ↗';
+  $('#resources').append(link);
+}
+$('#nextLink').href='project-details.html?project='+keys[(current+1)%keys.length];
+$('#nextKicker').textContent='Next project';
+$('#nextTitle').textContent=next.title;
+const observer=new IntersectionObserver(entries=>{
+  for(const entry of entries)if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}
+},{threshold:.12});
+document.querySelectorAll('[data-reveal]').forEach(el=>observer.observe(el));
+
+const canvas=$('#scene'),ctx=canvas.getContext('2d');
+let width=0,height=0,dpr=1,time=0,lastTime=performance.now(),scrollNow=scrollY,scrollLast=scrollNow,scrollSpeed=0;
+let pointerX=.5,pointerY=.5,heading=0;
+const rand=(min,max)=>min+Math.random()*(max-min);
+const colors={bg:P.theme.bg,accent:P.theme.accent,fg:P.theme.fg};
+const rgba=(hex,alpha)=>{
+  const value=hex.replace('#','');
+  return`rgba(${parseInt(value.slice(0,2),16)},${parseInt(value.slice(2,4),16)},${parseInt(value.slice(4,6),16)},${alpha})`;
+};
+function resize(){
+  dpr=Math.min(devicePixelRatio||1,2);width=innerWidth;height=innerHeight;
+  canvas.width=width*dpr;canvas.height=height*dpr;canvas.style.width=width+'px';canvas.style.height=height+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function projectToScreen(x,y,z){
+  const angle=heading+(reduced?0:Math.sin(time*.16)*.018);
+  const rx=x*Math.cos(angle)-z*Math.sin(angle),rz=x*Math.sin(angle)+z*Math.cos(angle);
+  const scale=380/Math.max(170,390+rz);
+  return{x:width*.5+rx*scale,y:height*.52+y*scale,s:scale};
+}
+const points=Array.from({length:48},(_,i)=>{
+  const a=Math.acos(1-2*(i+.5)/48),b=Math.PI*(1+Math.sqrt(5))*i;
+  return{x:Math.cos(b)*Math.sin(a)*240,y:Math.cos(a)*190,z:Math.sin(b)*Math.sin(a)*240};
+});
+function drawNetwork(){
+  const projected=points.map((p,i)=>{
+    const a=time*(reduced?0:.12)+scrollNow*.00035;
+    const x=p.x*Math.cos(a)-p.z*Math.sin(a),z=p.x*Math.sin(a)+p.z*Math.cos(a);
+    return{...projectToScreen(x,p.y,z),i};
+  });
+  ctx.lineWidth=1;
+  for(let i=0;i<projected.length;i++)for(let j=i+1;j<projected.length;j++){
+    const a=projected[i],b=projected[j],d=Math.hypot(points[i].x-points[j].x,points[i].y-points[j].y,points[i].z-points[j].z);
+    if(d<92){ctx.strokeStyle=rgba(colors.accent,.15+(1-d/92)*.38);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+  }
+  projected.forEach((p,i)=>{
+    ctx.fillStyle=i%5===0?colors.accent:colors.fg;ctx.globalAlpha=.2+(p.s*.25);
+    ctx.beginPath();ctx.arc(p.x,p.y,Math.max(1,2.2*p.s),0,Math.PI*2);ctx.fill();
+  });
+  ctx.globalAlpha=1;
+}
+function drawLeaves(){
+  for(let i=0;i<24;i++){
+    const t=time*(reduced?0:.12)+i*2.399+scrollNow*.00015,r=170+(i%4)*62;
+    const x=Math.cos(t)*r,y=Math.sin(t*1.3)*118,z=Math.sin(t)*r;
+    const p=projectToScreen(x,y,z),size=8+p.s*14,angle=t*.4+pointerY*.18;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(angle);
+    ctx.globalAlpha=.12+p.s*.32;ctx.strokeStyle=i%4===0?colors.accent:colors.fg;ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(size*.5,-size*.8,size,0);ctx.quadraticCurveTo(size*.5,size*.8,0,0);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(size*.5,0,size,0);ctx.stroke();ctx.restore();
+  }
+  ctx.globalAlpha=1;
+}
+function drawPages(){
+  const pageW=Math.min(width*.24,130),pageH=pageW*1.35;
+  for(let i=4;i>=0;i--){
+    const turn=time*(reduced?0:.22)+i*.14+scrollNow*.0007;
+    const x=(i-2)*16,y=(i-2)*9,z=(i-2)*20;
+    const corners=[[-pageW/2,-pageH/2],[pageW/2,-pageH/2],[pageW/2,pageH/2],[-pageW/2,pageH/2]]
+      .map(([px,py])=>projectToScreen(x+px*Math.cos(turn),y+py,z+px*Math.sin(turn)));
+    ctx.globalAlpha=.12+i*.025;ctx.strokeStyle=i===4?colors.accent:colors.fg;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(corners[0].x,corners[0].y);for(let k=1;k<4;k++)ctx.lineTo(corners[k].x,corners[k].y);ctx.closePath();ctx.stroke();
+    for(let row=1;row<=6;row++){
+      const frac=row/7,from=corners[3],to=corners[2];
+      const left={x:corners[0].x+(from.x-corners[0].x)*frac,y:corners[0].y+(from.y-corners[0].y)*frac};
+      const right={x:corners[1].x+(to.x-corners[1].x)*frac,y:corners[1].y+(to.y-corners[1].y)*frac};
+      ctx.beginPath();ctx.moveTo(left.x,left.y);ctx.lineTo(right.x,right.y);ctx.stroke();
+    }
+  }
+  ctx.globalAlpha=1;
+}
+function drawQuery(){
+  const cx=width*.5,cy=height*.52,base=Math.min(width,height)*.18;
+  ctx.lineWidth=1;
+  for(let ring=0;ring<4;ring++){
+    const radius=base+ring*26;
+    ctx.strokeStyle=rgba(colors.accent,.18-ring*.025);
+    ctx.beginPath();ctx.ellipse(cx,cy,radius,radius*.48,heading*.3,0,Math.PI*2);ctx.stroke();
+    for(let dot=0;dot<5;dot++){
+      const angle=time*(reduced?0:.16)+ring*.8+dot*Math.PI*2/5+scrollNow*.00025;
+      const px=cx+Math.cos(angle)*radius,py=cy+Math.sin(angle)*radius*.48;
+      ctx.fillStyle=(ring+dot)%4===0?colors.accent:colors.fg;
+      ctx.globalAlpha=.32+(ring+dot)%3*.12;
+      ctx.beginPath();ctx.arc(px,py,2+(ring===0?1:0),0,Math.PI*2);ctx.fill();
+    }
+  }
+  ctx.globalAlpha=1;
+  const pulse=1+Math.sin(time*2)*.04*(reduced?0:1);
+  ctx.strokeStyle=rgba(colors.accent,.65);ctx.beginPath();ctx.arc(cx,cy,base*.38*pulse,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle=rgba(colors.accent,.12);ctx.beginPath();ctx.arc(cx,cy,base*.38*pulse,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=colors.fg;ctx.globalAlpha=.85;ctx.font='700 11px "Space Mono",monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('DATA',cx,cy);ctx.globalAlpha=1;
+}
+function drawRoute(){
+  const centerX=width*.5,centerY=height*.52,scale=Math.min(width,height)/680;
+  const points=[];
+  for(let i=0;i<=80;i++){
+    const t=i/80;
+    points.push({x:centerX+(t-.5)*Math.min(width*.86,760),y:centerY+Math.sin(t*Math.PI*2.1)*105*scale+Math.sin(t*Math.PI*5)*18*scale});
+  }
+  ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.strokeStyle=rgba(colors.accent,.12);ctx.lineWidth=18*scale;ctx.beginPath();
+  points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
+  ctx.strokeStyle=rgba(colors.accent,.65);ctx.lineWidth=1.4;ctx.setLineDash([7,10]);ctx.lineDashOffset=reduced?0:-time*18;ctx.beginPath();
+  points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);
+  for(let i=0;i<5;i++){
+    const t=(i+.5)/5,index=Math.round(t*(points.length-1)),p=points[index];
+    ctx.fillStyle=colors.bg;ctx.strokeStyle=colors.fg;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(p.x,p.y,5*scale+2,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=colors.accent;ctx.beginPath();ctx.arc(p.x,p.y,2.1*scale+1,0,Math.PI*2);ctx.fill();
+  }
+  const busT=reduced?.52:((time*.08+scrollNow*.00012)%1),bus=points[Math.floor(busT*(points.length-1))];
+  ctx.save();ctx.translate(bus.x,bus.y-13*scale);ctx.fillStyle=colors.accent;
+  ctx.beginPath();ctx.roundRect(-13*scale,-7*scale,26*scale,14*scale,4*scale);ctx.fill();
+  ctx.fillStyle=colors.bg;ctx.fillRect(-8*scale,-4*scale,5*scale,4*scale);ctx.fillRect(1*scale,-4*scale,5*scale,4*scale);
+  ctx.fillStyle=colors.fg;ctx.beginPath();ctx.arc(-7*scale,8*scale,2.5*scale,0,Math.PI*2);ctx.arc(7*scale,8*scale,2.5*scale,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+const drawModes={network:drawNetwork,leaves:drawLeaves,pages:drawPages,query:drawQuery,route:drawRoute};
+function frame(now){
+  const dt=Math.min(.05,(now-lastTime)/1000);lastTime=now;
+  scrollNow=scrollY;const delta=scrollNow-scrollLast;scrollLast=scrollNow;
+  scrollSpeed=scrollSpeed*.82+delta*.18;
+  if(!reduced)time+=dt;
+  heading=(pointerX-.5)*.22+(reduced?0:Math.max(-.08,Math.min(.08,scrollSpeed*.0008)));
+  ctx.clearRect(0,0,width,height);
+  drawModes[P.theme.motif]();
+  const progress=Math.max(0,Math.min(1,scrollNow/(document.documentElement.scrollHeight-height||1)));
+  $('#progress').style.transform=`scaleX(${progress})`;
+  const scrolled=scrollNow>18;$('#header').classList.toggle('scrolled',scrolled);
+  const fig=$('.figure'),img=$('#projectImage'),rect=fig.getBoundingClientRect();
+  if(rect.bottom>0&&rect.top<height)img.style.transform=`translateY(${(rect.top+rect.height/2-height/2)*-.055}px)`;
+  requestAnimationFrame(frame);
+}
+addEventListener('resize',resize);
+addEventListener('scroll',()=>{scrollNow=scrollY;},{passive:true});
+addEventListener('pointermove',event=>{pointerX=event.clientX/Math.max(width,1);pointerY=event.clientY/Math.max(height,1);},{passive:true});
+$('#projectImage').addEventListener('error',()=>{$('#imageCaption').textContent='Project image could not be loaded';});
+resize();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

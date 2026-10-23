@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project — Adrian Voss</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>
+/* ============ PROJECT DATA + THEME (runs before first paint — no flash) ============ */
+const DATA=[
+{slug:'terra-atlas',title:'Terra Atlas',tags:'WebGL / Data map',year:'2025',seed:'terra-atlas-av',
+ role:'Design & Development',timeline:'6 months',status:'Live',
+ theme:{bg:'#0D1411',fg:'#E9F0E9',accent:'#4CC08D',mode:'terrain',name:'Terrain — pine on near-black'},
+ statement:'A relief-map explorer that renders 1.2 million elevation points at a steady 60fps — terrain you can feel through the screen.',
+ definition:['Terra Atlas is an interactive relief map that turns raw elevation data into something you can almost touch. Instead of coloring polygons, it draws the land itself: a WebGL heightfield of 1.2M points, lit in real time, that you can tilt, spin and fly over without a single loading screen.',
+ 'The interface deliberately stays out of the way — one search field, one layer toggle, a compass. Everything else is terrain, responding to the cursor like water and to scroll like altitude.'],
+ langs:['JavaScript','GLSL'],
+ stack:[{n:'JavaScript',k:'Language',note:'Application logic, UI state, worker orchestration'},
+  {n:'GLSL',k:'Shading language',note:'Custom lighting, atmospheric fog, hover picking'},
+  {n:'Three.js',k:'Library',note:'Scene graph, buffer geometry, render loop'},
+  {n:'Web Workers',k:'Platform API',note:'Decodes heightmap tiles off the main thread'},
+  {n:'Vite',k:'Tooling',note:'Dev server, bundling, code splitting'}],
+ why:'Maps are usually data; terrain is an experience. The surveys this is based on were beautiful but flat — the purpose of Terra Atlas is to make elevation legible at a glance, the way a physical relief model on a table does, but at planetary scale and in the browser.',
+ goals:['Make elevation legible without reading a legend','Region-to-region navigation with zero loading states','Fully usable offline after the first visit'],
+ stats:[{v:1.2,dec:1,suf:'M',label:'Elevation points'},{v:60,suf:'fps',label:'On mid-range phones'},{v:240,suf:'KB',label:'Initial payload'}],
+ process:[{k:'Challenge',v:'Raw heightmap tiles weigh gigabytes, and the main thread chokes on decoding them.'},
+  {k:'Approach',v:'Streaming LOD tiles decoded in workers, with a custom GLSL shader doing lighting and picking on the GPU.'},
+  {k:'Outcome',v:'A locked 60fps on four-year-old hardware — and a map people describe as “a place”, not “a page”.'}]},
+
+{slug:'mono-studio',title:'Mono Studio',tags:'Brand / Web',year:'2024',seed:'mono-studio-av',
+ role:'Art Direction, Front-end',timeline:'3 months',status:'Live',
+ theme:{bg:'#EFEDE7',fg:'#151412',accent:'#E63312',mode:'grid',name:'Swiss — black, bone, red'},
+ statement:'One typeface, one color, relentless spacing — a website for an architecture studio that gets out of the buildings’ way.',
+ definition:['Mono Studio is the identity and website of a two-person architecture practice. The brief was ruthless: nothing decorative, nothing that competes with the photography. The site is built like one of their floor plans — a strict grid, hairline rules, and typography doing all the expressive work.',
+ 'Every page is the same system at different scales: a single column of content, full-bleed images with measured whitespace, and captions set in small caps. Restraint was the feature, so the build optimized for it.'],
+ langs:['HTML','CSS','JavaScript'],
+ stack:[{n:'HTML / CSS',k:'Languages',note:'Hand-rolled grid, no CSS framework'},
+  {n:'Astro',k:'Framework',note:'Static-first architecture, islands only where needed'},
+  {n:'GSAP',k:'Library',note:'Scroll choreography, restrained to fades and reveals'},
+  {n:'Markdown CMS',k:'Content',note:'Editors write; the pipeline typesets'},
+  {n:'Netlify',k:'Hosting',note:'Instant builds, preview deploys per commit'}],
+ why:'Architecture portfolios overwhelmingly bury good work under sliders and parallax. The purpose here was to prove the opposite: that a site can feel expensive precisely because it withholds — and that a two-person studio can look like a ten-person one on the strength of spacing alone.',
+ goals:['Let the photography set the pace of every page','First paint under one second on 3G','Editable by the architects themselves, no dev needed'],
+ stats:[{v:0.9,dec:1,suf:'s',label:'Largest contentful paint'},{v:100,suf:'/100',label:'Lighthouse, all categories'},{v:14,suf:'KB',label:'Total CSS'}],
+ process:[{k:'Challenge',v:'The studio’s best images are enormous; the site had to feel instant anyway.'},
+  {k:'Approach',v:'Aggressive art-directed crops, AVIF with careful fallbacks, and layouts that reserve space so nothing shifts.'},
+  {k:'Outcome',v:'Sub-second loads and a design the founders call “the fifth project in the portfolio”.'}]},
+
+{slug:'kinetic-type',title:'Kinetic Type',tags:'Experiment / Motion',year:'2024',seed:'kinetic-type-av',
+ role:'Everything',timeline:'Ongoing',status:'Online experiment',
+ theme:{bg:'#0F0D16',fg:'#F1EEF8',accent:'#C6FF3E',mode:'glyphs',name:'Acid — lime on deep violet-black'},
+ statement:'Letterforms that listen — a browser playground where type reacts to sound, cursor velocity and scroll.',
+ definition:['Kinetic Type is an experiment that treats a headline as a physical object. Speak into your microphone and the letters compress like a spring; flick your cursor and they scatter; scroll and the whole specimen drifts like sediment. No install, no app — just a URL.',
+ 'It began as a weekend sketch about variable fonts and ended up shared across design twitter three times over. The whole experience is one HTML file, one canvas, and a stubborn refusal to use a framework.'],
+ langs:['JavaScript'],
+ stack:[{n:'Canvas 2D',k:'Platform API',note:'Glyph rendering, 60fps particle simulation'},
+  {n:'Web Audio',k:'Platform API',note:'Microphone amplitude and frequency analysis'},
+  {n:'Vanilla JS',k:'Language',note:'Physics integration — zero dependencies'},
+  {n:'CSS',k:'Language',note:'Layout and the specimen grid around the canvas'},
+  {n:'GitHub Pages',k:'Hosting',note:'Free, instant, permanently online'}],
+ why:'Most type specimens are static PDFs. The purpose of Kinetic Type was to make people feel letterforms as material — to give designers a toy that teaches variable-font behavior faster than any article, and to prove a rich experience can ship in 9KB with zero dependencies.',
+ goals:['Zero-install: open the URL and it works','Smooth 60fps on five-year-old laptops','Every state shareable via the URL, no accounts'],
+ stats:[{v:30,suf:'K',label:'Visits in week one'},{v:0,suf:'',label:'Dependencies'},{v:9,suf:'KB',label:'Total script weight'}],
+ process:[{k:'Challenge',v:'Audio permission prompts are scary; most visitors would quit at the modal.'},
+  {k:'Approach',v:'Cursor physics first, microphone strictly opt-in, and a graceful default animation when denied.'},
+  {k:'Outcome',v:'43% of visitors enable sound — unusually high — and stay a median of four minutes.'}]},
+
+{slug:'field-notes',title:'Field Notes',tags:'Editorial / CMS',year:'2023',seed:'field-notes-av',
+ role:'Design & Front-end',timeline:'4 months',status:'Live',
+ theme:{bg:'#F4EFE3',fg:'#26211A',accent:'#B3541E',mode:'lines',name:'Manuscript — sienna on cream'},
+ statement:'A long-form journal typeset like a broadsheet — reading progress, margin notes, and not a single cookie banner.',
+ definition:['Field Notes is an editorial site about design tools: essays, interviews and annotated link roundups. It is typeset the way a newspaper is — a measured 75-character column, hanging punctuation, footnotes at the foot, and rules that guide the eye without ever shouting.',
+ 'Under the hood it is deliberately boring: markdown in, careful HTML out. That boringness is the point; the craft is all in the typography and the reading rhythm.'],
+ langs:['HTML','CSS','JavaScript'],
+ stack:[{n:'Eleventy',k:'Site generator',note:'Build-time transforms, zero client framework'},
+  {n:'Markdown',k:'Content format',note:'Authors write; footnotes and pull-quotes are syntax'},
+  {n:'CSS Grid',k:'Language',note:'Broadsheet layout, margin-note columns, print styles'},
+  {n:'Vanilla JS',k:'Language',note:'Reading progress and footnote popovers, ~2KB'},
+  {n:'Netlify',k:'Hosting',note:'Free tier, instant rollback'}],
+ why:'Reading on the web has been colonized by trackers, modals and “related content”. Field Notes exists as an argument: that a publication can respect the reader completely — no cookies, no popups, no infinite scroll — and still feel modern, even luxurious.',
+ goals:['A comfortable 75-character measure on every device','Footnotes that stay at the foot, with instant previews','A print stylesheet good enough to actually print'],
+ stats:[{v:42,suf:'',label:'Long-form articles'},{v:0,suf:'',label:'Cookies or trackers'},{v:11,suf:'min',label:'Median time on page'}],
+ process:[{k:'Challenge',v:'Margin notes break on narrow screens; footnotes usually become modal hell.'},
+  {k:'Approach',v:'Progressive enhancement: margin notes on wide screens, tappable sidebars on narrow, print rules for paper.'},
+  {k:'Outcome',v:'Readers finish articles — an 11-minute median on 3,000-word essays.'}]},
+
+{slug:'atelier-nord',title:'Atelier Nord',tags:'E-commerce',year:'2023',seed:'atelier-nord-av',
+ role:'Front-end Lead',timeline:'5 months',status:'Live store',
+ theme:{bg:'#161210',fg:'#EFE7DA',accent:'#D9A05B',mode:'cubes',name:'Workshop — oak on warm charcoal'},
+ statement:'A furniture catalog and configurator that survives slow phones — two screens from first look to checkout.',
+ definition:['Atelier Nord sells small-batch furniture from a workshop in Tromsø. The catalog is photography-led: full-bleed images with prices set quietly beneath, and a configurator that renders wood, fabric and size combinations instantly — even on the slow phones guests bring into the showroom.',
+ 'The checkout was rebuilt as a conversation: two screens, no account required, progress always visible. Cart abandonment dropped by a third in the first month.'],
+ langs:['JavaScript','Vue'],
+ stack:[{n:'Nuxt (Vue)',k:'Framework',note:'SSR catalog pages, hydrated configurator'},
+  {n:'Node / Express',k:'Server',note:'API, cart logic, webhook handling'},
+  {n:'PostgreSQL',k:'Database',note:'Inventory, variants, order state'},
+  {n:'Stripe',k:'Payments',note:'Payment Element with local payment methods'},
+  {n:'Cloudinary',k:'Media',note:'Responsive art-directed product imagery'}],
+ why:'Furniture e-commerce usually optimizes for volume; Atelier Nord sells patience — pieces people wait months for. The purpose of the build was to make choosing feel considered rather than gamified: honest photography, calm pacing, and a configurator that answers “what if?” in under 100 milliseconds.',
+ goals:['Configurator updates under 100ms on 3G','A two-screen checkout with no forced account','Layout led by photography, never fighting it'],
+ stats:[{v:2,suf:'',label:'Screens to checkout'},{v:98,suf:'ms',label:'Average config update'},{v:38,suf:'%',label:'Lift in conversion'}],
+ process:[{k:'Challenge',v:'The configurator loved to stutter exactly on the showroom’s guest Wi-Fi.'},
+  {k:'Approach',v:'Precomputed combination renders with cross-fades instead of live 3D — same feel, a twentieth of the data.'},
+  {k:'Outcome',v:'98ms median updates and a conversion lift the owners noticed without analytics.'}]}
+];
+/* Apply the selected project's theme + title before the page paints */
+(function(){
+  const q=new URLSearchParams(location.search).get('p');
+  let i=DATA.findIndex(d=>d.slug===q); if(i<0)i=0;
+  window.PI=i;
+  const P=DATA[i],t=P.theme,s=document.documentElement.style;
+  const hx=h=>{h=h.replace('#','');return[0,2,4].map(k=>parseInt(h.slice(k,k+2),16));};
+  const f=hx(t.fg),b=hx(t.bg);
+  s.setProperty('--bg',t.bg);s.setProperty('--fg',t.fg);s.setProperty('--accent',t.accent);
+  s.setProperty('--line',`rgba(${f[0]},${f[1]},${f[2]},.16)`);
+  s.setProperty('--dim',`rgba(${f[0]},${f[1]},${f[2]},.6)`);
+  s.setProperty('--glass',`rgba(${b[0]},${b[1]},${b[2]},.8)`);
+  document.title=P.title+' — Adrian Voss';
+})();
+</script>
+<style>
+/* tokens — defaults match Terra Atlas; the head script re-themes per project */
+:root{
+  --bg:#0D1411;--fg:#E9F0E9;--accent:#4CC08D;
+  --line:rgba(233,240,233,.16);--dim:rgba(233,240,233,.6);--glass:rgba(13,20,17,.8);
+  --disp:'Syne',sans-serif;--mono:'Space Mono',monospace;
+  --ease:cubic-bezier(.22,.68,.26,1);--pad:clamp(20px,4vw,56px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--mono);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:var(--bg)}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media(pointer:fine){body,a,button{cursor:none}}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--fg);border:3px solid var(--bg)}
+html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-motion="reduced"] *::after{
+  animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;
+}
+
+/* ============ BACKGROUND ============ */
+#bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
+.vign{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 42%,transparent 52%,var(--glass) 130%)}
+.grain{
+  position:fixed;inset:-60%;z-index:90;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 9s steps(10) infinite;
+}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(3%,-5%)}40%{transform:translate(5%,2%)}60%{transform:translate(4%,-2%)}80%{transform:translate(2%,5%)}100%{transform:translate(0,0)}}
+#progress{position:fixed;top:0;left:0;right:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;z-index:60}
+
+/* ============ HEADER ============ */
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px var(--pad);transition:background .4s,box-shadow .4s}
+header.scrolled{background:var(--glass);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
+.back{display:inline-flex;align-items:center;gap:9px;font:400 11.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:color .25s}
+.back svg{width:13px;height:13px;transition:transform .3s var(--ease)}
+.back:hover{color:var(--accent)}
+.back:hover svg{transform:translateX(-4px)}
+.h-count{font:700 11px var(--mono);letter-spacing:.22em}
+.h-year{font-size:11px;letter-spacing:.16em;opacity:.6}
+
+main{position:relative;z-index:2}
+section{padding:clamp(60px,11vh,120px) var(--pad) 0}
+
+/* ============ HERO ============ */
+.hero{min-height:94svh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(30px,6vh,60px)}
+.hero-in{will-change:transform,opacity}
+.kicker{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.kicker em{font-style:normal;font-weight:400;color:var(--dim)}
+.p-title{font:800 clamp(3rem,12.5vw,10.5rem)/0.9 var(--disp);text-transform:uppercase;letter-spacing:-.025em;margin:18px 0 clamp(26px,5vh,46px)}
+.ln{display:block;overflow:hidden}
+.ln:last-child{margin-left:clamp(1.6rem,7vw,7rem)}
+.ln-in{display:inline-block;transform:translateY(115%);transition:transform 1.05s var(--ease)}
+body.loaded .ln-in{transform:none}
+.ln:last-child .ln-in{transition-delay:.1s}
+.outline{color:transparent;-webkit-text-stroke:clamp(1.4px,.22vw,2.8px) var(--fg)}
+.adot{display:inline-block;width:.14em;height:.14em;margin-left:.06em;background:var(--accent);border-radius:50%}
+.hero-meta{display:flex;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hm{flex:1 1 150px;padding:15px 22px 15px 0}
+.hm+.hm{border-left:1px solid var(--line);padding-left:22px}
+.hm span{display:block;font-size:9.5px;letter-spacing:.2em;opacity:.5;text-transform:uppercase;margin-bottom:6px}
+.hm b{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.cue{margin-top:26px;display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.7}
+.cue i{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2.2s var(--ease) infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.7);opacity:.4}}
+
+/* ============ HERO FIGURE ============ */
+.fig{margin:0 var(--pad);height:clamp(300px,62vh,640px);overflow:hidden;border:1px solid var(--line)}
+.fig img{width:100%;height:118%;object-fit:cover;filter:saturate(.92) contrast(1.04);will-change:transform}
+
+/* ============ SHARED ============ */
+.sec-head{display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:clamp(28px,6vh,54px)}
+.sec-head .idx{color:var(--accent);font-weight:700}
+.sec-head .rule{flex:1;height:1px;background:var(--line)}
+.sec-head .note{color:var(--dim);font-size:10.5px}
+[data-reveal]{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0s)}
+[data-reveal].in{opacity:1;transform:translateY(0)}
+.scrub{font:600 clamp(1.5rem,3.2vw,2.8rem)/1.3 var(--disp);letter-spacing:-.015em;max-width:1000px}
+.scrub .w{opacity:.15;transition:opacity .35s ease}
+.scrub .w.on{opacity:1}
+.def{display:grid;grid-template-columns:180px 1fr;gap:clamp(24px,4vw,64px);margin-top:clamp(40px,8vh,70px)}
+.def-label{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.def-body p{font-size:13.5px;line-height:2;max-width:62ch}
+.def-body p+p{margin-top:18px;color:var(--dim)}
+@media(max-width:760px){.def{grid-template-columns:1fr;gap:16px}}
+
+/* ============ STACK ============ */
+.s-rows{border-bottom:1px solid var(--line)}
+.s-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px 24px;align-items:baseline;padding:20px 6px;border-top:1px solid var(--line);transition:transform .35s var(--ease)}
+.s-idx{font:700 11px var(--mono);color:var(--accent)}
+.s-name{font:700 clamp(1.15rem,2vw,1.6rem) var(--disp);text-transform:uppercase;letter-spacing:-.01em;transition:color .25s}
+.s-kind{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--line);padding:5px 10px;justify-self:start}
+.s-note{font-size:11.5px;line-height:1.7;color:var(--dim);grid-column:2/4}
+@media(min-width:861px){
+  .s-row{grid-template-columns:auto 1.1fr .7fr 1.4fr}
+  .s-note{grid-column:auto}
+}
+.s-row:hover{transform:translateX(10px)}
+.s-row:hover .s-name{color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.chip{font:700 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line);padding:9px 14px;transition:.25s}
+.chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+/* ============ PURPOSE ============ */
+.why{font:600 clamp(1.2rem,2.4vw,1.9rem)/1.55 var(--disp);max-width:56ch}
+.goals-wrap{margin-top:clamp(36px,7vh,64px)}
+.goals{list-style:none;margin-top:18px;max-width:640px}
+.goals li{position:relative;padding:14px 0 14px 30px;border-top:1px solid var(--line);font-size:12.5px;line-height:1.7}
+.goals li::before{content:'';position:absolute;left:2px;top:20px;width:9px;height:9px;background:var(--accent)}
+.stats{margin-top:clamp(36px,7vh,64px);display:grid;grid-template-columns:repeat(3,1fr);gap:18px;border-top:1px solid var(--line);padding-top:clamp(24px,4vh,40px)}
+.stat-line{display:flex;align-items:baseline}
+.stat b{font:800 clamp(2.2rem,5vw,4rem)/1 var(--disp);letter-spacing:-.02em}
+.stat .suf{font:800 clamp(1.1rem,2.4vw,1.8rem) var(--disp);color:var(--accent);margin-left:3px}
+.stat>span:last-child{display:block;margin-top:10px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+@media(max-width:700px){.stats{grid-template-columns:1fr;gap:24px}}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3vw,40px);margin-top:clamp(34px,7vh,60px)}
+.p-step{border-top:1px solid var(--fg);padding-top:18px}
+.p-step b{display:block;font:700 11px var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.p-step p{font-size:12px;line-height:1.85;color:var(--dim)}
+@media(max-width:700px){.trio{grid-template-columns:1fr}}
+
+/* ============ NEXT ============ */
+.next-sec{padding-bottom:clamp(40px,8vh,80px)}
+.next-link{display:flex;align-items:center;justify-content:space-between;gap:20px;text-decoration:none;border:1px solid var(--line);padding:clamp(26px,5vh,54px) clamp(20px,3.5vw,50px);position:relative;overflow:hidden}
+.next-link::before{content:'';position:absolute;inset:0;background:var(--fg);transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease)}
+.next-link:hover::before{transform:scaleY(1)}
+.next-link>*{position:relative;transition:color .3s}
+.next-link:hover>*{color:var(--bg)}
+.nx-k{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.6;margin-bottom:10px}
+.nx-title{display:block;font:800 clamp(1.9rem,6vw,4.6rem)/1 var(--disp);text-transform:uppercase;letter-spacing:-.02em}
+.nx-dots{display:flex;gap:6px;margin-top:16px}
+.nx-dots i{width:12px;height:12px;border:1px solid rgba(128,128,128,.4)}
+.next-link svg{width:clamp(26px,4vw,44px);height:auto;flex:none;transition:transform .4s var(--ease)}
+.next-link:hover svg{transform:translate(6px,-6px)}
+
+footer{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;padding:22px var(--pad);border-top:1px solid var(--line);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+#toTop{display:inline-flex;align-items:center;gap:8px;background:none;border:none;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;transition:color .25s}
+#toTop:hover{color:var(--accent)}
+
+/* ============ CURSOR ============ */
+.cur-dot{position:fixed;top:0;left:0;z-index:100;width:6px;height:6px;border-radius:50%;background:var(--accent);pointer-events:none}
+.cur-ring{position:fixed;top:0;left:0;z-index:100;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--fg);pointer-events:none;transition:width .3s var(--ease),height .3s var(--ease),border-color .3s}
+.cur-ring.big{width:56px;height:56px;border-color:var(--accent)}
+@media(pointer:coarse){.cur-dot,.cur-ring{display:none}}
+</style>
+</head>
+<body>
+
+<canvas id="bg3d" aria-hidden="true"></canvas>
+<div class="vign" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+
+<header id="hdr">
+  <a class="back" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    All work
+  </a>
+  <span class="h-count" id="hCount"></span>
+  <span class="h-year" id="hYear"></span>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-in" id="heroIn">
+      <p class="kicker" id="kicker"></p>
+      <h1 class="p-title" id="pTitle"></h1>
+      <div class="hero-meta" id="heroMeta"></div>
+      <p class="cue"><i></i>Scroll — the background travels with you</p>
+    </div>
+  </section>
+
+  <figure class="fig" id="fig" data-reveal><img id="figImg" alt=""></figure>
+
+  <!-- 01 OVERVIEW / DEFINITION -->
+  <section id="overview">
+    <div class="sec-head" data-reveal><span class="idx">(01)</span><span>Overview</span><span class="rule"></span><span class="note">What it is</span></div>
+    <p class="scrub" id="scrub"></p>
+    <div class="def" data-reveal>
+      <span class="def-label">Definition</span>
+      <div class="def-body" id="defBody"></div>
+    </div>
+  </section>
+
+  <!-- 02 STACK & TOOLS -->
+  <section id="stack">
+    <div class="sec-head" data-reveal><span class="idx">(02)</span><span>Stack &amp; tools</span><span class="rule"></span><span class="note" id="stackNote"></span></div>
+    <div class="s-rows" id="sRows"></div>
+    <div class="chips" id="chips" data-reveal></div>
+  </section>
+
+  <!-- 03 PURPOSE -->
+  <section id="purpose">
+    <div class="sec-head" data-reveal><span class="idx">(03)</span><span>Purpose</span><span class="rule"></span><span class="note">Why it exists</span></div>
+    <div class="def" style="margin-top:0">
+      <span class="def-label" data-reveal>Why</span>
+      <p class="why" data-reveal id="why" style="--d:.08s"></p>
+    </div>
+    <div class="goals-wrap" data-reveal>
+      <span class="def-label">Goals</span>
+      <ul class="goals" id="goals"></ul>
+    </div>
+    <div class="stats" id="stats" data-reveal></div>
+    <div class="trio" id="trio"></div>
+  </section>
+
+  <!-- 04 NEXT -->
+  <section class="next-sec">
+    <div class="sec-head" data-reveal><span class="idx">(04)</span><span>Next</span><span class="rule"></span><span class="note">Keep reading</span></div>
+    <a class="next-link" id="nextLink" href="#" data-reveal>
+      <span>
+        <span class="nx-k">Next case study</span>
+        <span class="nx-title" id="nxTitle"></span>
+        <span class="nx-dots" id="nxDots" aria-hidden="true"></span>
+      </span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M7 17L17 7M9 7h8v8"/></svg>
+    </a>
+  </section>
+</main>
+
+<footer>
+  <span>©2025 Adrian Voss — <span id="themeName"></span></span>
+  <button id="toTop" type="button">Back to top
+    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+  </button>
+</footer>
+
+<div class="cur-dot" id="curDot" aria-hidden="true"></div>
+<div class="cur-ring" id="curRing" aria-hidden="true"></div>
+
+<script>
+(()=>{ 'use strict';
+const $=(s,c=document)=>c.querySelector(s);
+const $$=(s,c=document)=>[...c.querySelectorAll(s)];
+const lerp=(a,b,t)=>a+(b-a)*t;
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const rand=(a,b)=>a+Math.random()*(b-a);
+const pad=n=>String(n).padStart(2,'0');
+const TAU=Math.PI*2;
+const fine=matchMedia('(pointer:fine)').matches;
+
+/* ---------- Project + motion preference ---------- */
+const P=DATA[window.PI||0], idx=window.PI||0;
+const LS_KEY='av-folio-design';
+let motionReduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d&&d.motion==='reduced')motionReduced=true;}catch(e){}
+document.documentElement.dataset.motion=motionReduced?'reduced':'full';
+
+/* ---------- Build page content from data ---------- */
+ $('#hCount').textContent=pad(idx+1)+' / '+pad(DATA.length);
+ $('#hYear').textContent=P.year;
+ $('#kicker').innerHTML=`${P.tags} <em>— case study</em>`;
+const tw=P.title.split(' ');
+ $('#pTitle').innerHTML=
+  `<span class="ln"><span class="ln-in">${tw[0]}</span></span>`+
+  `<span class="ln"><span class="ln-in"><span class="outline">${tw.slice(1).join(' ')}</span><span class="adot"></span></span></span>`;
+ $('#heroMeta').innerHTML=[['Role',P.role],['Timeline',P.timeline],['Status',P.status],['Year',P.year]]
+  .map(([k,v])=>`<div class="hm"><span>${k}</span><b>${v}</b></div>`).join('');
+ $('#figImg').src=`https://picsum.photos/seed/${P.seed}/1600/900.jpg`;
+ $('#figImg').alt=P.title;
+const scrubEl=$('#scrub');
+scrubEl.textContent=P.statement;
+scrubEl.innerHTML=P.statement.split(' ').map(w=>`<span class="w">${w}</span>`).join(' ');
+const wEls=$$('.w',scrubEl);let lastN=-1;
+ $('#defBody').innerHTML=P.definition.map(t=>`<p>${t}</p>`).join('');
+ $('#stackNote').textContent=`${P.stack.length} tools · ${P.langs.join(' · ')}`;
+ $('#sRows').innerHTML=P.stack.map((s,i)=>
+  `<div class="s-row"><span class="s-idx">${pad(i+1)}</span><b class="s-name">${s.n}</b><span class="s-kind">${s.k}</span><span class="s-note">${s.note}</span></div>`).join('');
+ $('#chips').innerHTML=P.langs.map(l=>`<span class="chip">${l}</span>`).join('');
+ $('#why').textContent=P.why;
+ $('#goals').innerHTML=P.goals.map(g=>`<li>${g}</li>`).join('');
+ $('#stats').innerHTML=P.stats.map(s=>
+  `<div class="stat"><span class="stat-line"><b class="num" data-count="${s.v}" data-dec="${s.dec||0}">0</b><span class="suf">${s.suf}</span></span><span>${s.label}</span></div>`).join('');
+ $('#trio').innerHTML=P.process.map((s,i)=>
+  `<div class="p-step" data-reveal style="--d:${(i*0.1).toFixed(1)}s"><b>${s.k}</b><p>${s.v}</p></div>`).join('');
+const nx=DATA[(idx+1)%DATA.length];
+ $('#nextLink').href='project.html?p='+nx.slug;
+ $('#nxTitle').textContent=nx.title;
+ $('#nxDots').innerHTML=[nx.theme.bg,nx.theme.fg,nx.theme.accent].map(c=>`<i style="background:${c}"></i>`).join('');
+ $('#themeName').textContent='Theme: '+P.theme.name;
+
+/* ---------- Canvas 3D engine (pure perspective math, no libraries) ---------- */
+const cv=$('#bg3d'),ctx=cv.getContext('2d');
+let W=0,H=0,cx=0,cyc=0;
+function resize(){
+  const DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+'px';cv.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);cx=W/2;cyc=H*0.52;
+}
+const hx2=h=>{h=h.replace('#','');return[0,2,4].map(k=>parseInt(h.slice(k,k+2),16));};
+const fRGB=hx2(P.theme.fg),aRGB=hx2(P.theme.accent);
+const FG=a=>`rgba(${fRGB[0]},${fRGB[1]},${fRGB[2]},${a})`;
+const AC=a=>`rgba(${aRGB[0]},${aRGB[1]},${aRGB[2]},${a})`;
+/* layered-sine "noise" for organic surfaces */
+const n2=(x,z)=>Math.sin(x*0.055+z*0.042)*0.55+Math.sin(x*0.028-z*0.068)*0.3+Math.sin(x*0.11+z*0.017)*0.15;
+
+/* camera */
+let pitch=0.5,yaw=0,camZ=0;
+const F=340,CAMD=130;
+function proj(x,y,z,o){
+  const cy=Math.cos(yaw),sy=Math.sin(yaw);
+  const x1=x*cy-z*sy, z1=x*sy+z*cy;              /* yaw around Y */
+  const cp=Math.cos(pitch),sp=Math.sin(pitch);
+  const y2=y*cp+z1*sp, z2=-y*sp+z1*cp+CAMD;      /* pitch around X */
+  const s=F/Math.max(z2,20);
+  o.x=cx+x1*s; o.y=cyc-y2*s; o.s=s;
+}
+
+/* scroll & pointer state */
+let scs=scrollY,lastY=scrollY,sv=0,tmx=0.5,tmxC=innerWidth/2,tmyC=innerHeight/2,smx=0.5,tt=0,lastTs=performance.now();
+addEventListener('mousemove',e=>{tmxC=e.clientX;tmyC=e.clientY;tmx=e.clientX/Math.max(W,1);},{passive:true});
+let rxs=innerWidth/2,rys=innerHeight/2;
+
+const EDGES=[[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]];
+const spawnX=z=>(Math.random()*2-1)*(W/2)*(z/F)*1.15;
+const spawnY=z=>(Math.random()*2-1)*(H/2)*(z/F)*0.95;
+
+const MODES={
+  /* Terra Atlas — fly over a wireframe terrain */
+  terrain:{pBase:0.5,
+    draw(){
+      camZ=40+scs*0.9;
+      const half=262*(W/H),cols=72,stepX=2*half/cols,stepZ=13,rows=26,amp=58,floor=-72;
+      const off=camZ%stepZ,o={};
+      ctx.lineWidth=1.3;ctx.lineJoin='round';
+      for(let i=rows;i>=1;i--){
+        const zr=i*stepZ-off,wz=camZ+zr;
+        const dep=clamp(1-zr/330,0,1);
+        const accRow=(((i+Math.floor(camZ/stepZ))%7)+7)%7===0;
+        ctx.strokeStyle=accRow?AC(0.16+dep*0.5):FG(0.06+dep*0.34);
+        ctx.beginPath();
+        for(let c=0;c<=cols;c++){
+          const x=-half+c*stepX,yy=floor+n2(x,wz)*amp;
+          proj(x,yy,zr,o);
+          c?ctx.lineTo(o.x,o.y):ctx.moveTo(o.x,o.y);
+        }
+        ctx.stroke();
+        if(accRow&&!motionReduced){
+          ctx.strokeStyle=AC(0.1+dep*0.4);
+          ctx.beginPath();
+          for(let c=0;c<=cols;c+=3){
+            const x=-half+c*stepX,yy=floor+n2(x,wz)*amp;
+            proj(x,yy,zr,o);const x1=o.x,y1=o.y;
+            proj(x,yy-9,zr,o);
+            ctx.moveTo(x1,y1);ctx.lineTo(o.x,o.y);
+          }
+          ctx.stroke();
+        }
+      }
+    }},
+  /* Mono Studio — Swiss corridor grid */
+  grid:{pBase:0.5,
+    draw(){
+      camZ=scs*1.1;
+      const half=262*(W/H),zFar=340,zNear=14,step=15,rows=22,o={};
+      ctx.lineWidth=1;
+      const plane=(yy,base)=>{
+        for(let i=rows;i>=1;i--){
+          const zr=i*step-off,dep=clamp(1-zr/zFar,0,1);
+          ctx.strokeStyle=FG(base*dep+0.04);
+          proj(-half,yy,zr,o);const x1=o.x,y1=o.y;
+          proj(half,yy,zr,o);
+          ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(o.x,o.y);ctx.stroke();
+        }
+        ctx.strokeStyle=FG(base*0.45+0.03);
+        const xs=7;
+        for(let k=-xs;k<=xs;k++){
+          const x=k*(half/xs);
+          proj(x,yy,zNear,o);const x1=o.x,y1=o.y;
+          proj(x,yy,zFar,o);
+          ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(o.x,o.y);ctx.stroke();
+        }
+      };
+      plane(-64,0.5);
+      plane(150,0.26);
+      ctx.strokeStyle=AC(0.5);
+      proj(0,-64,zNear,o);const ax=o.x,ay=o.y;
+      proj(0,-64,zFar,o);
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(o.x,o.y);ctx.stroke();
+    }},
+  /* Kinetic Type — letters flying toward the camera */
+  glyphs:{pBase:0.05,
+    init(){
+      this.chars=(P.title.replace(/\s/g,'')+'+*#↗↘').toUpperCase().split('');
+      this.parts=[];
+      for(let i=0;i<130;i++)this.parts.push(this.mk(rand(60,640)));
+    },
+    mk(z){return{x:spawnX(z),y:spawnY(z),z,c:this.chars[(Math.random()*this.chars.length)|0],acc:Math.random()<0.16,ph:Math.random()*TAU};},
+    draw(dt){
+      pitch=this.pBase+(motionReduced?0:clamp(sv*0.0015,-0.06,0.08));
+      const sp=motionReduced?clamp(Math.abs(sv),0,60)*0.12*dt*60:(0.55+clamp(Math.abs(sv),0,50)*0.10)*dt*60;
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      const o={};
+      for(const p of this.parts){
+        p.z-=sp;
+        if(p.z<36){Object.assign(p,this.mk(640));p.z=620+Math.random()*20;}
+        const wob=motionReduced?0:Math.sin(tt*0.8+p.ph)*5;
+        proj(p.x+wob,p.y+wob*0.7,p.z,o);
+        const size=Math.min(9.5*o.s,120);
+        if(size<3)continue;
+        const a=clamp(1-p.z/660,0,1)*0.75+0.05;
+        ctx.font=`700 ${size.toFixed(1)}px "Space Mono",monospace`;
+        ctx.fillStyle=p.acc?AC(a):FG(a*0.8);
+        ctx.fillText(p.c,o.x,o.y);
+      }
+    }},
+  /* Field Notes — a rippling manuscript plane with a red margin */
+  lines:{pBase:0.5,
+    draw(){
+      camZ=scs*0.6;
+      const half=300*(W/H),step=15,rows=20,amp=7,floor=-46,o={};
+      const off=camZ%step;
+      ctx.lineWidth=1.2;ctx.lineJoin='round';
+      for(let i=rows;i>=1;i--){
+        const zr=i*step-off,wz=camZ+zr;
+        const dep=clamp(1-zr/300,0,1);
+        ctx.strokeStyle=FG(0.07+dep*0.4);
+        ctx.beginPath();
+        for(let c=0;c<=26;c++){
+          const x=-half+c*(2*half/26),yy=floor+n2(x*0.55,wz*0.45)*amp;
+          proj(x,yy,zr,o);
+          c?ctx.lineTo(o.x,o.y):ctx.moveTo(o.x,o.y);
+        }
+        ctx.stroke();
+      }
+      ctx.strokeStyle=AC(0.55);ctx.lineWidth=1.5;
+      ctx.beginPath();
+      for(let z=12;z<=340;z+=12){
+        const yy=floor+n2(-150*0.55,(camZ+z)*0.45)*amp;
+        proj(-150,yy,z,o);
+        z===12?ctx.moveTo(o.x,o.y):ctx.lineTo(o.x,o.y);
+      }
+      ctx.stroke();
+    }},
+  /* Atelier Nord — floating wireframe blocks */
+  cubes:{pBase:0.14,
+    init(){this.boxes=[];for(let i=0;i<15;i++)this.boxes.push(this.mk(rand(120,660)));},
+    mk(z){return{x:spawnX(z),y:spawnY(z)+10,z,s:rand(13,42),ry:rand(0,TAU),rx:rand(0,TAU),vr:rand(0.05,0.22)*(Math.random()<.5?-1:1),acc:Math.random()<0.18};},
+    draw(dt){
+      pitch=this.pBase+(motionReduced?0:clamp(sv*0.0012,-0.05,0.07));
+      const sp=(0.35+clamp(Math.abs(sv),0,40)*0.08)*dt*60;
+      const o={};
+      const bs=this.boxes.slice().sort((a,b)=>b.z-a.z);
+      for(const b of bs){
+        if(!motionReduced)b.z-=sp;
+        if(!motionReduced){b.ry+=b.vr*dt;b.rx+=b.vr*0.6*dt;}
+        if(b.z<50){Object.assign(b,this.mk(660));b.z=640;}
+        const h=b.s/2,cyv=Math.cos(b.ry),syv=Math.sin(b.ry),cxv=Math.cos(b.rx),sxv=Math.sin(b.rx);
+        const P8=[];
+        for(let m=0;m<8;m++){
+          const dx=(m&1?h:-h),dy=(m&2?h:-h),dz=(m&4?h:-h);
+          const lx=dx*cyv-dz*syv, lz=dx*syv+dz*cyv;
+          const ly=dy*cxv-lz*sxv, lz2=dy*sxv+lz*cxv;
+          proj(b.x+lx,b.y+ly,b.z+lz2,o);
+          P8.push([o.x,o.y]);
+        }
+        const a=clamp(1-b.z/680,0,1)*0.6+0.05;
+        ctx.lineWidth=b.acc?1.6:1.1;
+        ctx.strokeStyle=b.acc?AC(a):FG(a*0.75);
+        ctx.beginPath();
+        for(const[u,v]of EDGES){ctx.moveTo(P8[u][0],P8[u][1]);ctx.lineTo(P8[v][0],P8[v][1]);}
+        ctx.stroke();
+      }
+    }}
+};
+const MODE=MODES[P.theme.mode];
+if(MODE.init)MODE.init();
+
+/* ---------- Reveal on scroll ---------- */
+const io=new IntersectionObserver(es=>{
+  for(const en of es){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}}
+},{threshold:.1,rootMargin:'0px 0px -6% 0px'});
+ $$('[data-reveal]').forEach(el=>io.observe(el));
+
+/* ---------- Animated counters ---------- */
+function runCount(el){
+  const target=parseFloat(el.dataset.count),dec=+(el.dataset.dec||0),t0=performance.now(),dur=1400;
+  (function step(ts){
+    const p=clamp((ts-t0)/dur,0,1),e=1-Math.pow(1-p,3);
+    el.textContent=(target*e).toFixed(dec);
+    if(p<1)requestAnimationFrame(step);
+  })(t0);
+}
+const cio=new IntersectionObserver(es=>{
+  for(const en of es){if(en.isIntersecting){cio.unobserve(en.target);runCount(en.target);}}
+},{threshold:.5});
+ $$('.num').forEach(el=>cio.observe(el));
+
+/* ---------- Cursor ---------- */
+const curDot=$('#curDot'),curRing=$('#curRing');
+if(fine){
+  document.addEventListener('mouseover',e=>{curRing.classList.toggle('big',!!e.target.closest('a,button'));});
+}
+
+/* ---------- Loaded state (title reveal) ---------- */
+const setLoaded=()=>document.body.classList.add('loaded');
+if(document.readyState==='complete')setTimeout(setLoaded,80);
+else addEventListener('load',()=>setTimeout(setLoaded,80));
+setTimeout(setLoaded,900);
+
+ $('#toTop').addEventListener('click',()=>scrollTo({top:0,behavior:motionReduced?'auto':'smooth'}));
+
+/* ---------- Master loop ---------- */
+const progress=$('#progress'),hdr=$('#hdr'),heroIn=$('#heroIn'),fig=$('#fig'),figImg=$('#figImg');
+let hdrScrolled=false;
+function loop(ts){
+  const dt=clamp((ts-lastTs)/1000,0.001,0.05);lastTs=ts;
+  const y=scrollY,raw=y-lastY;lastY=y;
+  scs=lerp(scs,y,0.09);
+  sv=lerp(sv,raw,0.09);
+  smx=lerp(smx,tmx,0.06);
+  if(!motionReduced)tt+=dt;
+  const svT=motionReduced?0:clamp(sv*0.0022,-0.12,0.16);
+  pitch=MODE.pBase+svT;
+  yaw=(smx-0.5)*0.3;
+  MODE.draw(dt);
+
+  const dh=document.documentElement.scrollHeight-innerHeight;
+  progress.style.transform=`scaleX(${dh>0?y/dh:0})`;
+  const hs=y>24;if(hs!==hdrScrolled){hdrScrolled=hs;hdr.classList.toggle('scrolled',hs);}
+
+  if(y<innerHeight){
+    heroIn.style.transform=`translateY(${y*-0.18}px)`;
+    heroIn.style.opacity=String(clamp(1-y/innerHeight*1.15,0,1));
+  }
+  const fr=fig.getBoundingClientRect();
+  if(fr.bottom>0&&fr.top<innerHeight){
+    figImg.style.transform=`translateY(${((fr.top+fr.height/2-innerHeight/2)*-0.08).toFixed(1)}px)`;
+  }
+
+  const r=scrubEl.getBoundingClientRect();
+  const start=innerHeight*0.86,end=innerHeight*0.34;
+  const n=Math.round(clamp((start-r.top)/(start-end),0,1)*wEls.length);
+  if(n!==lastN){lastN=n;for(let i=0;i<wEls.length;i++)wEls[i].classList.toggle('on',i<n);}
+
+  if(fine){
+    curDot.style.transform=`translate(${tmxC}px,${tmyC}px) translate(-50%,-50%)`;
+    rxs=lerp(rxs,tmxC,0.18);rys=lerp(rys,tmyC,0.18);
+    curRing.style.transform=`translate(${rxs}px,${rys}px) translate(-50%,-50%)`;
+  }
+  requestAnimationFrame(loop);
+}
+let rzT;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(resize,120);});
+resize();
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
